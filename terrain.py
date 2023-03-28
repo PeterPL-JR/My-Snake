@@ -1,8 +1,6 @@
 import pygame
 import random
 
-IS_GRASS_ITEM = 1
-
 # Initialize terrain
 def init_terrain():
     import snake
@@ -18,14 +16,15 @@ def render_terrain():
     for tile in snake.map_tiles:
         tile.render()
 
-def rand_apple(screen):
-    return Apple(screen)
+def rand_apple(snake_object):
+    apple = Apple(snake_object.screen)
+    return apple
 
 def take_apple(snake_object):
     import snake
     
     snake_object.points += 1
-    snake.apple = rand_apple(snake_object.screen)
+    snake.apple = rand_apple(snake_object)
 
 class Image_Asset:
     def __init__(self, path):
@@ -49,6 +48,8 @@ class Tile:
     def __init__(self, x, y, screen):
         self.x = x
         self.y = y
+
+        IS_GRASS_ITEM = 1
         self.item = random.randint(0, IS_GRASS_ITEM) == IS_GRASS_ITEM
         self.screen = screen
 
@@ -64,19 +65,14 @@ class Tile:
 
 class Apple:
     def __init__(self, screen):
-        from snake import MAP_SIZE
-
         self.screen = screen
-        self.x = random.randint(0, MAP_SIZE - 1)
-        self.y = 3
+        self.rand_pos()
 
-    def rand_pos():
+    def rand_pos(self):
         from snake import MAP_SIZE
 
-        x_pos = random.randint(0, MAP_SIZE - 1)
-        y_pos = random.randint(0, MAP_SIZE - 1)
-
-        return (x_pos, y_pos)
+        self.x = random.randint(1, MAP_SIZE - 2)
+        self.y = random.randint(1, MAP_SIZE - 2)
     
     def render(self):
         from snake import F_SIZE
