@@ -17,7 +17,7 @@ def render_terrain():
         tile.render()
 
 def rand_apple(snake_object):
-    apple = Apple(snake_object.screen)
+    apple = Apple(snake_object)
     return apple
 
 def take_apple(snake_object):
@@ -64,9 +64,11 @@ class Tile:
             grass_tex_2.render(rendering_x, rendering_y, F_SIZE, F_SIZE, self.screen)
 
 class Apple:
-    def __init__(self, screen):
-        self.screen = screen
-        self.rand_pos()
+    def __init__(self, snake_object):
+        self.snake = snake_object
+        self.screen = self.snake.screen
+
+        self.try_gen_pos()
 
     def rand_pos(self):
         from snake import MAP_SIZE
@@ -81,3 +83,13 @@ class Apple:
         render_y = self.y * F_SIZE
 
         apple_tex.render(render_x, render_y, F_SIZE, F_SIZE, self.screen)
+    
+    def try_gen_pos(self):
+        correct_pos = False
+        while not correct_pos:
+            self.rand_pos()
+            correct_pos = True
+
+            for pos in self.snake.all_positions:
+                if pos['x'] == self.x and pos['y'] == self.y:
+                    correct_pos = False

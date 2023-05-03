@@ -92,9 +92,9 @@ class Snake:
     
     def render(self):
         self.render_part(self.x, self.y, self.direction, sk_head_img)
-        self.render_previous()
+        self.render_previous_parts()
 
-    def render_previous(self):
+    def render_previous_parts(self):
         length = len(self.all_positions)
         for i in range(0, length):
             pos = self.all_positions[i]
