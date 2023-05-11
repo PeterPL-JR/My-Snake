@@ -36,8 +36,6 @@ def update():
             sys.exit()
         if(event.type == pygame.KEYDOWN):
             input.key_down(event.key)
-        if(event.type == pygame.MOUSEBUTTONDOWN):
-            input.mouse_clicked(event.button)
     
     player_snake.update()
 
@@ -70,9 +68,6 @@ def render_game_over():
     text = text_font.render("Game over!", True, "white")
     text_rect = text.get_rect(center=(S_SIZE / 2, S_SIZE / 2))
     screen.blit(text, text_rect)
-
-def reset():
-    pass
 
 # Game loop
 render()

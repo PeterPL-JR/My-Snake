@@ -24,8 +24,3 @@ def key_down(key):
     # Player move right
     if(key == pygame.K_d):
         snake.player_snake.move(DIR_RIGHT)
-
-def mouse_clicked(button):
-    import snake
-    if(button == pygame.BUTTON_LEFT and snake.game_over):
-        snake.reset()

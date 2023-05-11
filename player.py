@@ -21,13 +21,13 @@ class Snake:
         self.direction = input.DIR_RIGHT
         self.all_positions = []
 
-        self.x_direction, self.y_direction = get_direction(self.direction)
+        self.x_direction, self.y_direction = get_direction_array(self.direction)
 
     def move(self, dir):
         import snake
         if snake.game_over: return
 
-        x_move, y_move = get_direction(dir)
+        x_move, y_move = get_direction_array(dir)
         if(x_move == -self.x_direction and y_move == -self.y_direction):
             return
         
@@ -98,8 +98,16 @@ class Snake:
         length = len(self.all_positions)
         for i in range(0, length):
             pos = self.all_positions[i]
-            image = sk_tail_img if (i == 0) else sk_body_img_1
 
+            if (i > 0 and i < length):
+                part_before = self.all_positions[i - 1]
+                part_after = self.all_positions[i + 1] if (i != length - 1) else {"x":self.x, "y":self.y, "dir":self.direction}
+
+                if not (part_before['x'] == part_after['x'] or part_before['y'] == part_after['y']):
+                    self.render_curve_part(pos['x'], pos['y'], part_before, part_after)
+                    continue
+
+            image = sk_tail_img if (i == 0) else sk_body_img_1
             self.render_part(pos['x'], pos['y'], pos['dir'], image)
 
     def render_part(self, x, y, dir, image):
@@ -110,6 +118,17 @@ class Snake:
 
         angle = get_angle(dir)
         image.render_rotated(rendering_x, rendering_y, F_SIZE, F_SIZE, angle, self.screen)
+
+    def render_curve_part(self, x, y, before, after):
+        angle = 0
+
+        if((before['x'] == x-1 and after['y'] == y-1) or (after['x'] == x-1 and before['y'] == y-1)): angle = 90
+        if((before['x'] == x-1 and after['y'] == y+1) or (after['x'] == x-1 and before['y'] == y+1)): angle = 180
+        if((before['x'] == x+1 and after['y'] == y-1) or (after['x'] == x+1 and before['y'] == y-1)): angle = 0
+        if((before['x'] == x+1 and after['y'] == y+1) or (after['x'] == x+1 and before['y'] == y+1)): angle = 270
+
+        dir = get_direction(angle)
+        self.render_part(x, y, dir, sk_body_img_2)
 
     def is_snake_here(self, x, y):
         for pos in self.all_positions:
@@ -122,7 +141,7 @@ class Snake:
             return True
         return False
 
-def get_direction(dir_index):
+def get_direction_array(dir_index):
     x_move = 0
     y_move = 0
     
@@ -150,3 +169,13 @@ def get_angle(dir_index):
         angle = 180
 
     return angle
+
+def get_direction(angle):
+    if(angle == 90):
+        return input.DIR_LEFT
+    if(angle == 270):
+        return input.DIR_RIGHT
+    if(angle == 0):
+        return input.DIR_UP
+    if(angle == 180):
+        return input.DIR_DOWN
